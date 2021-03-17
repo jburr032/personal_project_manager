@@ -11,9 +11,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ppm_tool.ppm.project.Project;
 import com.ppm_tool.ppm.services.MappingValidationErrors;
@@ -37,5 +40,12 @@ public class ProjectController {
 		
 		projectService.saveOrUpdate(project);
 		return new ResponseEntity<Project>(project, HttpStatus.CREATED);
+	}
+	
+	@GetMapping("/{projectId}")
+	public ResponseEntity<?> getProject(@PathVariable String projectId){
+		Project fetchedProject = projectService.findProjectByIdentifier(projectId);
+
+		return new ResponseEntity<Project>(fetchedProject, HttpStatus.OK);
 	}
 }
