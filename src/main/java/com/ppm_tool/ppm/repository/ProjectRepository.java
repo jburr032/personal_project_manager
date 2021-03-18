@@ -11,4 +11,7 @@ import com.ppm_tool.ppm.project.Project;
 public interface ProjectRepository extends CrudRepository<Project, Long> {
 
 	Project findByProjectIdentified(String projectId);
+	
+	@Override
+	Iterable<Project> findAll();
 }

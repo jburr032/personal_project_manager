@@ -17,12 +17,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.ppm_tool.ppm.project.Project;
 import com.ppm_tool.ppm.services.MappingValidationErrors;
 import com.ppm_tool.ppm.services.ProjectService;
 
-@Controller
+@RestController
 @RequestMapping("/api/v1/project")
 public class ProjectController {
 	
@@ -47,5 +48,11 @@ public class ProjectController {
 		Project fetchedProject = projectService.findProjectByIdentifier(projectId);
 
 		return new ResponseEntity<Project>(fetchedProject, HttpStatus.OK);
+	}
+	
+	@GetMapping("/all")
+	public Iterable<Project> getAllProjects(){
+		return projectService.findAllProjects();
+				
 	}
 }
