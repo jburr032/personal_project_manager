@@ -2,10 +2,12 @@ import { FormLabel } from '@chakra-ui/form-control';
 import { Input } from '@chakra-ui/input';
 import { Container, Text } from '@chakra-ui/layout';
 import { Textarea } from '@chakra-ui/textarea';
-import React, { useState } from 'react'
-import { Button } from '@chakra-ui/react'
-
-const AddProject = () => {
+import React, { useState } from 'react';
+import { Button } from '@chakra-ui/react';
+import { connect } from 'react-redux';
+import { createProject } from '../../redux/actions/projectActions';
+import { useDispatch } from 'react-redux';
+const AddProject = ({ history }) => {
     const [projectFields, setFields] = useState({
         projectName: "",
         projectIdentified: "",
@@ -13,14 +15,15 @@ const AddProject = () => {
         start_date: new Date(),
         end_date: ""
     });
+    const dispatch = useDispatch();
 
     const handleChange = (event) => {
         setFields(fields => ({ ...fields, [event.target.name]:event.target.value  }))
     }
 
     const handleSubmit = (event) => {
-        event.preventDefault
-        console.log({projectFields})
+        event.preventDefault();
+        dispatch(createProject(projectFields, history));
     }
 
     return (
@@ -77,4 +80,6 @@ const AddProject = () => {
     )
 }
 
-export default AddProject
+export default connect(
+    null, { createProject }
+)(AddProject);

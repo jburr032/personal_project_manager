@@ -31,7 +31,6 @@ const Header = () => {
                         <Button 
                             marginRight="20px" 
                             color="white" 
-                            color="white" 
                             variant="link">
                                 Dashboard
                         </Button>
