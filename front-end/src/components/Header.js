@@ -1,5 +1,6 @@
 import React from 'react'
 import { Grid, GridItem, Button } from '@chakra-ui/react'
+import { Link } from 'react-router-dom'
 
 const Header = () => {
     return (
@@ -14,7 +15,11 @@ const Header = () => {
             backgroundColor="rgb(66 147 225)" 
             color="white">
             <GridItem>
-                <Button color="white" variant="link">DIJKSTRA</Button>
+                <Link  to="/dashboard">
+                    <Button color="white" variant="link">
+                        DIJKSTRA
+                    </Button>
+                </Link>
             </GridItem>
             <GridItem >
                 <div style={{ 
@@ -22,9 +27,30 @@ const Header = () => {
                     float: "right", 
                     paddingRight: "15px" 
                 }}>
-                    <Button marginRight="20px" color="white" color="white" variant="link">Dashboard</Button>
-                    <Button marginRight="20px" color="white" variant="link">Sign Up</Button>
-                    <Button color="white" variant="link">Login</Button>
+                    <Link to="/dashboard">
+                        <Button 
+                            marginRight="20px" 
+                            color="white" 
+                            color="white" 
+                            variant="link">
+                                Dashboard
+                        </Button>
+                    </Link>
+                    <Link>
+                        <Button 
+                            marginRight="20px" 
+                            color="white" 
+                            variant="link">
+                                Sign Up
+                        </Button>
+                    </Link>
+                    <Link>
+                        <Button 
+                            color="white" 
+                            variant="link">
+                                Login
+                        </Button>
+                    </Link>
                 </div>
                 
             </GridItem>
