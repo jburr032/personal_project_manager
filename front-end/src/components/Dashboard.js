@@ -1,7 +1,7 @@
-import { Button } from '@chakra-ui/button';
 import { Center, Text } from '@chakra-ui/layout';
-import React from 'react'
-import ProjectItem from './project/ProjectItem'
+import React from 'react';
+import ProjectItem from './project/ProjectItem';
+import CreateProjectBtn from './project/CreateProjectBtn';
 
 const Dashboard = () => {
     return (
@@ -11,13 +11,13 @@ const Dashboard = () => {
             </Center>
 
             <div style={{ float:"right" }}>
-                <Button>Create Project</Button>
+                <CreateProjectBtn />
             </div>
             <hr style={{ marginTop: "55px" }}/>
-            {/* <ProjectItem /> */}
             <Center>
                 <Text fontSize="50px">Projects</Text> 
             </Center>
+            <ProjectItem />
         </div>
     )
 }
