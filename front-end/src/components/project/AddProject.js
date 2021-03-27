@@ -99,6 +99,4 @@ const AddProject = ({ history }) => {
     )
 }
 
-export default connect(
-    null, { createProject }
-)(AddProject);
+export default AddProject
