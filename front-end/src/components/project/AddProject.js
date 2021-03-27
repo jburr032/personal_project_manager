@@ -2,12 +2,13 @@ import { FormLabel } from '@chakra-ui/form-control';
 import { Input } from '@chakra-ui/input';
 import { Container, Text } from '@chakra-ui/layout';
 import { Textarea } from '@chakra-ui/textarea';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '@chakra-ui/react';
-import { connect } from 'react-redux';
-import { createProject } from '../../redux/actions/projectActions';
+import { createProject, getSingleProject } from '../../redux/actions/projectActions';
 import { useDispatch, useSelector } from 'react-redux';
-import { CLEAR_ERROR } from '../../redux/actions/types';
+import { CLEAR_ERROR, GET_ERRORS } from '../../redux/actions/types';
+import { useParams } from 'react-router';
+import { CLEAR_SINGLE_PROJECT } from "../../redux/actions/types";
 
 const AddProject = ({ history }) => {
     const [projectFields, setFields] = useState({
@@ -18,7 +19,28 @@ const AddProject = ({ history }) => {
         end_date: ""
     });
     const dispatch = useDispatch();
+    const { projectId } = useParams();
     const errors = useSelector(state => state.errors);
+    const { project } = useSelector(state => state.projects);
+
+    useEffect(() => {
+        dispatch(getSingleProject(projectId));
+    // eslint-disable-next-line 
+    }, [projectId])
+
+    useEffect(() => {
+        setFields(project);
+    // eslint-disable-next-line    
+    }, [project])
+
+    useEffect(() => {
+        return () => { 
+            dispatch({
+            type: CLEAR_SINGLE_PROJECT
+        });
+    }
+    // eslint-disable-next-line 
+    }, [])
 
     const handleChange = (event) => {
         setFields(fields => ({ ...fields, [event.target.name]:event.target.value  }));
@@ -28,11 +50,17 @@ const AddProject = ({ history }) => {
     const handleSubmit = (event) => {
         event.preventDefault();
         dispatch(createProject(projectFields, history));
+        dispatch({
+            type: GET_ERRORS,
+            payload: {}
+        });
     }
 
     return (
         <Container>
-            <Text marginTop="15px" marginBottom="25px" marginLeft="150px" fontSize="30px">Creat/Edit Project</Text>
+            <Text marginTop="15px" marginBottom="25px" marginLeft="200px" fontSize="30px">
+                {projectId ? "Edit Project" : "Create Project"}
+            </Text>
             <form onSubmit={handleSubmit}>
                 {errors.projectName &&
                     <Text position="absolute" top="106px" color="crimson">{errors.projectName}</Text>
@@ -41,7 +69,7 @@ const AddProject = ({ history }) => {
                     isInvalid={errors.projectName}
                     errorBorderColor="crimson"
                     name="projectName"
-                    value={projectFields.name}
+                    value={projectFields.projectName}
                     onChange={handleChange}
                     placeholder="Project name*"
                     size="md"
@@ -53,6 +81,7 @@ const AddProject = ({ history }) => {
                 <Input
                     isInvalid={errors.projectIdentified}
                     errorBorderColor="crimson"
+                    isDisabled={projectId}
                     name="projectIdentified"
                     value={projectFields.id}
                     onChange={handleChange}
@@ -77,8 +106,9 @@ const AddProject = ({ history }) => {
                 <Input
                     type="date"
                     name="start_date"
-                    value={projectFields.name}
+                    value={projectFields.start_date}
                     onChange={handleChange}
+                    isDisabled={projectId}
                     size="md"
                     marginBottom="15px"
                 />
@@ -86,7 +116,7 @@ const AddProject = ({ history }) => {
                 <Input
                     type="date"
                     name="end_date"
-                    value={projectFields.id}
+                    value={projectFields.end_date}
                     onChange={handleChange}
                     size="md"
                     marginBottom="25px"

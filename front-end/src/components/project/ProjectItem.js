@@ -2,8 +2,11 @@ import { Box, Grid, GridItem, Text, Container } from '@chakra-ui/layout'
 import React from 'react'
 import { Button } from '@chakra-ui/button';
 import { CalendarIcon, EditIcon, DeleteIcon } from '@chakra-ui/icons'
+import { useHistory } from 'react-router';
 
 const ProjectItem = ({ project }) => {
+    const history = useHistory();
+
     return (
         <Container maxWidth="867px" marginBottom="40px">
             <Box backgroundColor="#8080801a">
@@ -17,7 +20,8 @@ const ProjectItem = ({ project }) => {
                     </GridItem>
                     <GridItem fontSize="15px" colSpan={2} paddingTop="40px" paddingLeft="112px">
                         <Button leftIcon={<CalendarIcon />} colorScheme="blue" width="145px" marginBottom="10px">Board</Button>
-                        <Button 
+                        <Button
+                        onClick={() => history.push(`/update/${project.projectIdentified}`)} 
                         leftIcon={
                         <EditIcon 
                             marginBottom="3px" 

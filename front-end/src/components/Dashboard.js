@@ -7,11 +7,12 @@ import { useDispatch, useSelector } from 'react-redux';
 
 const Dashboard = () => { 
     const dispatch = useDispatch();
-    const { projects } = useSelector(state => state.projects);
+    let { projects } = useSelector(state => state.projects);
 
     useEffect(() => {
-        projects.length === 0 && dispatch(getProjects());
-    }, [projects.length])
+        dispatch(getProjects());
+    }, [dispatch])
+
 
     return (
         <div style={{ paddingRight: "215px", paddingLeft: "215px"}}>

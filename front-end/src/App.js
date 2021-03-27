@@ -13,6 +13,7 @@ function App() {
           <Header />
           <Switch>
             <Route exact path="/add-project" component={AddProject} />
+            <Route exact path="/update/:projectId" component={AddProject} />
             <Route path="/dashboard" component={Dashboard} />
           </Switch>
         </div>
