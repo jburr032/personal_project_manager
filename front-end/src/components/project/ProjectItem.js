@@ -3,17 +3,17 @@ import React from 'react'
 import { Button } from '@chakra-ui/button';
 import { CalendarIcon, EditIcon, DeleteIcon } from '@chakra-ui/icons'
 
-const ProjectItem = () => {
+const ProjectItem = ({ project }) => {
     return (
-        <Container maxWidth="867px">
+        <Container maxWidth="867px" marginBottom="40px">
             <Box backgroundColor="#8080801a">
                 <Grid border="1px solid grey" height="200px" templateColumns="repeat(6, 1fr)" gap={3}>
                     <GridItem colSpan={1}>
-                        <Text paddingLeft="3vw" paddingTop="10px">React</Text>
+                        <Text paddingLeft="3vw" paddingTop="10px">{project?.projectIdentified}</Text>
                     </GridItem>
                     <GridItem colSpan={3}>
-                        <Text fontSize="4xl">React/Full stack</Text>
-                        <Text>Project description of the project card in this project cart</Text>
+                        <Text fontSize="4xl">{project?.projectName}</Text>
+                        <Text>{project?.description}</Text>
                     </GridItem>
                     <GridItem fontSize="15px" colSpan={2} paddingTop="40px" paddingLeft="112px">
                         <Button leftIcon={<CalendarIcon />} colorScheme="blue" width="145px" marginBottom="10px">Board</Button>

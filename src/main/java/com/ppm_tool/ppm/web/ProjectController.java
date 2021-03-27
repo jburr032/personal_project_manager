@@ -28,7 +28,7 @@ import com.ppm_tool.ppm.services.ProjectService;
 
 @RestController
 @RequestMapping("/api/v1/project")
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin //(origins = "http://localhost:3000")
 public class ProjectController {
 	
 	@Autowired
@@ -36,6 +36,12 @@ public class ProjectController {
 	
 	@Autowired
 	private MappingValidationErrors mappingValidationService;
+	
+	@GetMapping("/all")
+	public Iterable<Project> getAllProjects(){
+		return projectService.findAllProjects();
+				
+	}
 
 	@PostMapping("")
 	public ResponseEntity<?> createNewProject(@Valid @RequestBody Project project, BindingResult result){
@@ -54,11 +60,7 @@ public class ProjectController {
 		return new ResponseEntity<Project>(fetchedProject, HttpStatus.OK);
 	}
 	
-	@GetMapping("/all")
-	public Iterable<Project> getAllProjects(){
-		return projectService.findAllProjects();
-				
-	}
+
 	
 	@DeleteMapping("/{projectId}")
 	public ResponseEntity<String> deleteProject(@PathVariable String projectId){
