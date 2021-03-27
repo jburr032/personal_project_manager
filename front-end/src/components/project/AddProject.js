@@ -12,10 +12,10 @@ import { CLEAR_SINGLE_PROJECT } from "../../redux/actions/types";
 
 const AddProject = ({ history }) => {
     const [projectFields, setFields] = useState({
-        projectName: "",
+        projectName: "PROJECT",
         projectIdentified: "",
-        description: "",
-        start_date: new Date(),
+        description: "My project",
+        start_date:  "2021-03-15", //new Date().toDateString(),
         end_date: ""
     });
     const dispatch = useDispatch();
@@ -24,7 +24,7 @@ const AddProject = ({ history }) => {
     const { project } = useSelector(state => state.projects);
 
     useEffect(() => {
-        dispatch(getSingleProject(projectId));
+       projectId && dispatch(getSingleProject(projectId));
     // eslint-disable-next-line 
     }, [projectId])
 

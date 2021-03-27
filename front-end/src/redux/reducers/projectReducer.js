@@ -1,4 +1,8 @@
-import { GET_PROJECTS, GET_SINGLE_PROJECT, CLEAR_SINGLE_PROJECT } from '../actions/types';
+import { 
+    GET_PROJECTS, 
+    GET_SINGLE_PROJECT, 
+    CLEAR_SINGLE_PROJECT,
+ } from '../actions/types';
 
 const initial_state = {
     project: {},
@@ -9,6 +13,7 @@ const initial_state = {
 export default (state = initial_state, action) => {
     switch(action.type){
         case GET_PROJECTS:
+            console.log(action.payload)
             return { ...state, projects: action.payload };
         
         case GET_SINGLE_PROJECT:
@@ -16,7 +21,7 @@ export default (state = initial_state, action) => {
 
         case CLEAR_SINGLE_PROJECT:
             return { ...state, project: {} }
-        
+                
         default:
             return state;
     }

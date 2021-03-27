@@ -3,7 +3,7 @@ import { GET_ERRORS, GET_PROJECTS, GET_SINGLE_PROJECT } from './types';
 
 const CREATE_PROJECT_ROUTE = "http://localhost:8080/api/v1/project";
 const GET_PROJECTS_ROUTE = "http://localhost:8080/api/v1/project/all"; 
-const GET_SINGLE_PROJECT_ROUTE =  "http://localhost:8080/api/v1/project/";
+const SINGLE_PROJECT_ROUTE =  "http://localhost:8080/api/v1/project/";
 export const createProject = (project, history) => async dispatch => 
 {
     try{
@@ -21,6 +21,7 @@ export const createProject = (project, history) => async dispatch =>
 export const getProjects = () => async dispatch => {
     try{
         const res = await axios.get(GET_PROJECTS_ROUTE);
+        console.log(res)
         dispatch({
             type: GET_PROJECTS,
             payload: res.data
@@ -33,11 +34,21 @@ export const getProjects = () => async dispatch => {
 
 export const getSingleProject = (projectId) => async dispatch => {
     try{
-        const res = await axios.get(GET_SINGLE_PROJECT_ROUTE + projectId);
+        const res = await axios.get(SINGLE_PROJECT_ROUTE + projectId);
         dispatch({
             type: GET_SINGLE_PROJECT,
             payload: res.data
         });
+
+    }catch(error){
+       console.error(error);
+    }
+}
+
+export const deleteProject = (projectId) => async dispatch => {
+    try{
+        await axios.delete(SINGLE_PROJECT_ROUTE + projectId);
+        dispatch(getProjects());
 
     }catch(error){
        console.error(error);
