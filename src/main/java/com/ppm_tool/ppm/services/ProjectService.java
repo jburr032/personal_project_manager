@@ -5,8 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ppm_tool.ppm.domain.Backlog;
 import com.ppm_tool.ppm.exceptions.ProjectIdException;
 import com.ppm_tool.ppm.project.Project;
+import com.ppm_tool.ppm.repository.BacklogRepository;
 import com.ppm_tool.ppm.repository.ProjectRepository;
 
 @Service
@@ -15,9 +17,28 @@ public class ProjectService {
 	@Autowired
 	private ProjectRepository projectRepo;
 	
+	@Autowired
+	private BacklogRepository backlogRepo;
+	
 	public Project saveOrUpdate(Project project) {
 		try {
-			project.setProjectIdentified(project.getProjectIdentified().toUpperCase());
+			String projectIdentified = project.getProjectIdentified().toUpperCase();
+			project.setProjectIdentified(projectIdentified);
+			
+			if(project.getId() == null) {
+				Backlog backlog = new Backlog();
+				project.setBacklog(backlog);
+				backlog.setProject(project);
+				backlog.setProjectIdentifier(projectIdentified);
+				
+			}
+			
+			if(project.getId() != null) {
+				Backlog backlog = backlogRepo.findByProjectIdentifier(projectIdentified);
+				
+				project.setBacklog(backlog);
+			}
+			
 			return projectRepo.save(project);
 			
 		}catch(Exception e) {
