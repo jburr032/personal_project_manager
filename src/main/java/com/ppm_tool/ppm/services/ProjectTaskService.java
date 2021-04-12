@@ -22,6 +22,9 @@ public class ProjectTaskService {
 	@Autowired
 	private BacklogRepository backlogRepo;
 	
+	@Autowired
+	private ProjectRepository projectRepo;
+	
 	public ProjectTask addProjectTask(String projectIdentifier, ProjectTask projectTask) {
         try {
             //PTs to be added to a specific project, project != null, BL exists
@@ -52,15 +55,55 @@ public class ProjectTaskService {
 
             return projectTaskRepo.save(projectTask);
         }catch (Exception e){
-            throw new ProjectNotFoundException("Project not Found");
+            throw new ProjectNotFoundException("Project not found");
         }
 
 	}
 
 	public Iterable<ProjectTask> findBacklogById(String backlog_id) {
-		// TODO Auto-generated method stub
+		Project project = projectRepo.findByProjectIdentified(backlog_id);
+		
+		if(project == null) {
+			throw new ProjectNotFoundException("Project with " + backlog_id + " not found");
+		}
+		
 		return projectTaskRepo.findByProjectIdentifierOrderByPriority(backlog_id);
 	}
 	
+	public ProjectTask findProjectTaskBySequence(String backlog_id, String pptSequence) {
+		Backlog backlog = backlogRepo.findByProjectIdentifier(backlog_id);
+		
+		if(backlog == null) {
+			throw new ProjectNotFoundException("Project with " + backlog_id + " not found");
+		}
+		
+		ProjectTask projectTask = projectTaskRepo.findByProjectSequence(pptSequence);
+		
+		if(projectTask == null) {
+			throw new ProjectNotFoundException("Project task " + pptSequence + " not found");
+		}
+		
+		if(!projectTask.getProjectIdentifier().equals(backlog_id)){
+			throw new ProjectNotFoundException("Project task " + pptSequence + " not found in project " + backlog_id);
 
+		}
+		
+		return projectTask;
+	}
+	
+	public ProjectTask updateProjectTask(ProjectTask updatedTask, String backlog_id, String project_task_sequence) {
+		ProjectTask projectTask = findProjectTaskBySequence(backlog_id, project_task_sequence);
+		
+		projectTask = updatedTask;
+		
+		return projectTaskRepo.save(projectTask);
+	}
+	
+	public void deletePtByProjectSequence(String backlog_id, String project_task_sequence) {
+		ProjectTask projectTask = findProjectTaskBySequence(backlog_id, project_task_sequence);
+		
+		projectTaskRepo.delete(projectTask);
+				
+
+	}
 }

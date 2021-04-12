@@ -23,8 +23,8 @@ public class ProjectTask {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column(updatable = false )
-	private String ProjectSequence;
+	@Column(updatable = false, unique = true)
+	private String projectSequence;
 	@NotBlank(message = "Please include a project summary")
 	private String summary;
 	private String acceptanceCriteria;
@@ -35,7 +35,7 @@ public class ProjectTask {
 	private Date updated_At;
 	
 	//ManyToOne With Backlog
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "backlog_id", updatable = false, nullable = false)
 	@JsonIgnore
 	private Backlog backlog;
@@ -66,11 +66,11 @@ public class ProjectTask {
 	}
 
 	public String getProjectSequence() {
-		return ProjectSequence;
+		return projectSequence;
 	}
 
-	public void setProjectSequence(String projectSequence) {
-		ProjectSequence = projectSequence;
+	public void setProjectSequence(String updatedProjectSequence) {
+		projectSequence = updatedProjectSequence;
 	}
 
 	public String getSummary() {
@@ -139,7 +139,7 @@ public class ProjectTask {
 
 	@Override
 	public String toString() {
-		return "ProjectTask [id=" + id + ", ProjectSequence=" + ProjectSequence + ", summary=" + summary
+		return "ProjectTask [id=" + id + ", ProjectSequence=" + projectSequence + ", summary=" + summary
 				+ ", acceptanceCriteria=" + acceptanceCriteria + ", status=" + status + ", priority=" + priority
 				+ ", dueDate=" + dueDate + ", created_At=" + created_At + ", updated_At=" + updated_At
 				+ ", projectIdentifier=" + projectIdentifier + "]";
