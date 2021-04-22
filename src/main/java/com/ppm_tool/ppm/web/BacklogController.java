@@ -26,8 +26,7 @@ import com.ppm_tool.ppm.services.ProjectTaskService;
 
 @RestController
 @RequestMapping("/api/v1/backlog")
-@CrossOrigin //(origins = "http://localhost:3000")
-
+@CrossOrigin(origins = "http://localhost:3000")
 public class BacklogController {
 	
 	@Autowired

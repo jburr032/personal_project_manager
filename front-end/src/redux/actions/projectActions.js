@@ -21,7 +21,6 @@ export const createProject = (project, history) => async dispatch =>
 export const getProjects = () => async dispatch => {
     try{
         const res = await axios.get(GET_PROJECTS_ROUTE);
-        console.log(res)
         dispatch({
             type: GET_PROJECTS,
             payload: res.data

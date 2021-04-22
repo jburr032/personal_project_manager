@@ -21,7 +21,15 @@ const ProjectItem = ({ project }) => {
                         <Text>{project?.description}</Text>
                     </GridItem>
                     <GridItem fontSize="15px" colSpan={2} paddingTop="40px" paddingLeft="112px">
-                        <Button leftIcon={<CalendarIcon />} colorScheme="blue" width="145px" marginBottom="10px">Board</Button>
+                        <Button 
+                            leftIcon={<CalendarIcon />} 
+                            colorScheme="blue" 
+                            width="145px" 
+                            marginBottom="10px"
+                            onClick={() => history.push(`/projectBoard/${project.projectIdentified}`)}
+                        >
+                            Board
+                        </Button>
                         <Button
                         onClick={() => history.push(`/update/${project.projectIdentified}`)} 
                         leftIcon={

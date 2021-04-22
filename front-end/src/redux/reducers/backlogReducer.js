@@ -19,5 +19,8 @@ export default (state = initial_state, action) => {
         
         case DELETE_BACKLOG:
             return { ...state }
+        
+        default:
+            return state;
     }
 }
