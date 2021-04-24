@@ -1,12 +1,10 @@
 import React from 'react';
 import { useDrop } from 'react-dnd';
 import { List, ListItem } from '@chakra-ui/react';
-import EmptyProjectTask from './projectTask/EmptyProjectTask';
-import ProjectTask from './projectTask/ProjectTask';
-import { dijkstraConstants, DUMMY_CONST } from '../../dnd/djikstraConstants';
+import { dijkstraConstants } from '../../dnd/djikstraConstants';
 
 const Swimlane = ({ children, laneType, laneTitle }) => {
-    const [collectedProps, drop] = useDrop(() => ({
+    const [, drop] = useDrop(() => ({
         drop: () => ({ laneType }),
         // hover: (item, monitor) => console.log(item),
         accept: [dijkstraConstants.TODO, dijkstraConstants.INPROGRESS, dijkstraConstants.DONE]

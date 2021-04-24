@@ -12,7 +12,11 @@ const initial_state = {
 export default (state = initial_state, action) => {
     switch(action.type){
         case GET_BACKLOG:
-            return { ...state, project_tasks: action.payload }
+            return { 
+                ...state, 
+                project_tasks: action.payload.project_tasks, 
+                next_sequence: action.payload.next_sequence 
+            }
         
         case GET_PROJECT_TASK:
             return { ...state, project_task: action.payload }

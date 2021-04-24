@@ -70,6 +70,10 @@ public class ProjectTaskService {
 		return projectTaskRepo.findByProjectIdentifierOrderByPriority(backlog_id);
 	}
 	
+	public Integer getNextProjectSequence(String backlog_id) {
+		return backlogRepo.findByProjectIdentifier(backlog_id).getPTSequence() + 1;
+	}
+	
 	public ProjectTask findProjectTaskBySequence(String backlog_id, String pptSequence) {
 		Backlog backlog = backlogRepo.findByProjectIdentifier(backlog_id);
 		

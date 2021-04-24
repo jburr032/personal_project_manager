@@ -1,6 +1,8 @@
 package com.ppm_tool.ppm.web;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -26,7 +28,7 @@ import com.ppm_tool.ppm.services.ProjectTaskService;
 
 @RestController
 @RequestMapping("/api/v1/backlog")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin //(origins = "http://localhost:3000")
 public class BacklogController {
 	
 	@Autowired
@@ -49,10 +51,20 @@ public class BacklogController {
 	}
 	
 	@GetMapping("/{backlog_id}")
-	public Iterable<ProjectTask> getProjectBacklog(@PathVariable String backlog_id){
+	public ResponseEntity<?> getNextProjectSequence(@PathVariable String backlog_id){
+		HashMap<String, Object> getResponse = new HashMap<String,Object>();
 		
-		return projectTaskService.findBacklogById(backlog_id);
+		Integer nextSequence = projectTaskService.getNextProjectSequence(backlog_id);
+		Iterable<ProjectTask> projectTasks = projectTaskService.findBacklogById(backlog_id);
+		
+		getResponse.put("next_sequence", nextSequence);
+		getResponse.put("project_tasks", projectTasks);
+		
+		
+		return new ResponseEntity<Map<String, Object>>(getResponse, HttpStatus.OK);
+		
 	}
+	
 	
 	@GetMapping("/{backlog_id}/{project_task_sequence}")
 	public ResponseEntity<?> getProjectTaskBySequence(@PathVariable String backlog_id, @PathVariable String project_task_sequence) {

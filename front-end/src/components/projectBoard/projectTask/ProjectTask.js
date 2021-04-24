@@ -7,23 +7,30 @@ import {
     ArrowDownIcon, 
     ArrowUpIcon 
 } from '@chakra-ui/icons';
-import { dijkstraConstants, DUMMY_CONST } from '../../../dnd/djikstraConstants';
+import { dijkstraConstants } from '../../../dnd/djikstraConstants';
 import { useDrag } from 'react-dnd';
 import { updateTask } from '../../../redux/actions/backLogActions';
 import { useDispatch } from 'react-redux';
 
 const handleTaskMove = (task, tasks, monitor, dispatch) => {
-    const laneType = monitor?.getDropResult()?.laneType;
-
-    tasks.map(t => { 
-        return {
+    const laneType = monitor?.getDropResult()?.laneType?.toUpperCase();
+    const updatedTasks = tasks.map(t => { 
+        const updatedTask =  {
             ...t,
             status: task.projectSequence === t.projectSequence && laneType  
                 ? laneType : t.status
-        }
+        };
+
+        return updatedTask
     });
-    dispatch(updateTask(task));
-    return tasks;
+
+    // Do not send a call if type is undefined
+    if(laneType){
+        task.status = laneType ? laneType.toUpperCase() : task.status;
+        dispatch(updateTask(task));
+    }
+
+    return updatedTasks;
 }
 const ProjectTask = ({ task, setQueue }) => {
     const dispatch = useDispatch();
@@ -31,7 +38,9 @@ const ProjectTask = ({ task, setQueue }) => {
     const [{ isDragging }, drag] = useDrag(() => ({
         type: dijkstraConstants.TODO,
         item: task,
-        end: (item, monitor) => setQueue(prev => handleTaskMove(task, [...prev], monitor, dispatch)),
+        end: (item, monitor) => setQueue(
+            prev => handleTaskMove(task, prev, monitor, dispatch)
+        ),
         collect: (monitor) => ({
           isDragging: !!monitor.isDragging()
         })

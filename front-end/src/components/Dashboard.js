@@ -28,7 +28,8 @@ const Dashboard = () => {
                 <Text fontSize="50px" marginBottom="25px">Projects</Text> 
             </Center>
             {
-                projects && projects?.map(pr =>  <ProjectItem project={pr} />)
+                projects && projects?.map((pr, index) =>  
+                <ProjectItem key={`${index}-${pr.projectName}`} project={pr} />)
             }
            
         </div>
