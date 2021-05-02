@@ -9,37 +9,35 @@ import {
 } from '@chakra-ui/icons';
 import { dijkstraConstants } from '../../../dnd/djikstraConstants';
 import { useDrag } from 'react-dnd';
-import { updateTask } from '../../../redux/actions/backLogActions';
+import { setTaskToEdit, updateTask } from '../../../redux/actions/backLogActions';
 import { useDispatch } from 'react-redux';
 
-const handleTaskMove = (task, tasks, monitor, dispatch) => {
+const handleTaskMove = (task, tasks, monitor, dispatch, setQueue) => {    
     const laneType = monitor?.getDropResult()?.laneType?.toUpperCase();
-    const updatedTasks = tasks.map(t => { 
-        const updatedTask =  {
-            ...t,
-            status: task.projectSequence === t.projectSequence && laneType  
-                ? laneType : t.status
-        };
+    let updatedTask = {};
 
-        return updatedTask
+    const updatedTasks = tasks.map(t => {
+        if(t.projectSequence === task.projectSequence){
+            const update = { ...t, status: laneType !== undefined ? laneType : t.status };
+            updatedTask = update;
+            return update
+        }else{
+            return t;
+        }
     });
 
-    // Do not send a call if type is undefined
-    if(laneType){
-        task.status = laneType ? laneType.toUpperCase() : task.status;
-        dispatch(updateTask(task));
-    }
+    dispatch(updateTask(updatedTask));
+    setQueue(updatedTasks);
 
-    return updatedTasks;
 }
-const ProjectTask = ({ task, setQueue }) => {
+const ProjectTask = ({ task, setQueue, setTaskForm, taskIndex }) => {
     const dispatch = useDispatch();
 
     const [{ isDragging }, drag] = useDrag(() => ({
         type: dijkstraConstants.TODO,
         item: task,
         end: (item, monitor) => setQueue(
-            prev => handleTaskMove(task, prev, monitor, dispatch)
+            prev => handleTaskMove(task, prev, monitor, dispatch, setQueue)
         ),
         collect: (monitor) => ({
           isDragging: !!monitor.isDragging()
@@ -60,6 +58,10 @@ const ProjectTask = ({ task, setQueue }) => {
                 marginBottom="5px"
                 height="150px"
                 backgroundColor="white"
+                onClick={() => {
+                    dispatch(setTaskToEdit(task));
+                    setTaskForm(prev => !prev);
+                }}
             >
                 <Text height="72px">
                     {
@@ -69,9 +71,9 @@ const ProjectTask = ({ task, setQueue }) => {
                 </Text>
                 <Text>
                     {
-                        task.priority === 1 ? 
-                        <ArrowUpIcon color="red"/> : task.priority === 3 ? 
-                        <ArrowDownIcon color="blue"/> : ""
+                        task.priority === 1 || task.priority === "high" ? 
+                        <ArrowUpIcon color="red"/> : task.priority === 3 || task.priority === "low" ? 
+                        <ArrowDownIcon color="blue"/> : <ArrowUpIcon color="orange"/>
                     }
                 </Text>              
                 <Text color="grey">{task.projectSequence}</Text>

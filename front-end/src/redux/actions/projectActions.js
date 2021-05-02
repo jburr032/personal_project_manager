@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { GET_ERRORS, GET_PROJECTS, GET_SINGLE_PROJECT } from './types';
+import { SET_ERRORS, GET_PROJECTS, GET_SINGLE_PROJECT } from './types';
 
 const CREATE_PROJECT_ROUTE = "http://localhost:8080/api/v1/project";
 const GET_PROJECTS_ROUTE = "http://localhost:8080/api/v1/project/all"; 
@@ -12,7 +12,7 @@ export const createProject = (project, history) => async dispatch =>
 
     }catch(error){
         dispatch({ 
-            type: GET_ERRORS, 
+            type: SET_ERRORS, 
             payload: error.response.data
         })
     }

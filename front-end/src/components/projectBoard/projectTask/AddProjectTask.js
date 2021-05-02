@@ -1,54 +1,101 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { 
-    Text, Container, Box,
+    Text,
     FormControl, Input, FormLabel,
-    Textarea, Select, Button
+    Textarea, Select, Button,
+    DrawerBody,
+    DrawerFooter,
+    DrawerHeader,
+    DrawerContent,
+    DrawerCloseButton,
+    DrawerOverlay,
+    Drawer
 } from '@chakra-ui/react';
 import { dijkstraConstants } from '../../../dnd/djikstraConstants';
-import { useDispatch } from 'react-redux';
-import { getBacklog, createTask } from '../../../redux/actions/backLogActions';
+import { useDispatch, useSelector } from 'react-redux';
+import { createTask, deleteTask, updateTask, setTaskToEdit} from '../../../redux/actions/backLogActions';
+import { format } from 'date-fns';
+
 
 const DEFAULT_TASK = (projectIdentifier) => ({
     summary: "",
-    acceptanceCriteria: null,
+    acceptanceCriteria: "",
     status: "TO_DO",
     priority: 3,
     dueDate: null,
     created_At: new Date(),
     updated_At: new Date(),
-    projectIdentifier
+    projectIdentifier,
+    projectSequence: null
 });
 
-const AddProjectTask = ({ projectIdentifier, projectSequence, closeForm }) => {
+const AddProjectTask = ({ projectIdentifier, projectSequence, showTaskForm, setTaskForm }) => {
     const dispatch = useDispatch();
     const [newTask, setNewTask] = useState(DEFAULT_TASK(projectIdentifier));
+    const { backlog, errors } = useSelector(state => state );
+
+    useEffect(() => {    
+        const savedTask = {...backlog.project_task};
+    
+        switch(savedTask.priority){
+            case 1:
+                savedTask.priority = "high";
+                break;
+            case 2:
+                savedTask.priority = "medium";
+                break;
+            case 3:
+                savedTask.priority = "low";
+                break;
+            default:
+                break;
+
+        }
+        if(savedTask.dueDate){
+            savedTask.dueDate = format(new Date(savedTask.dueDate), 'yyyy-MM-dd');
+        }
+
+        setNewTask(savedTask);
+
+    }, [backlog])
 
     const handleSubmit = (e)  => {
         e.preventDefault();
-        dispatch(createTask(newTask, projectIdentifier));
 
-        closeForm(prev => !prev);
+        newTask.projectIdentifier ? 
+            dispatch(updateTask(newTask, projectIdentifier)) : 
+            dispatch(createTask(newTask, projectIdentifier))
+
+        setTaskForm(prev => !prev);
         setNewTask(DEFAULT_TASK(projectIdentifier));
-        setTimeout(() => dispatch(getBacklog(projectIdentifier)), 250);
+        dispatch(setTaskToEdit(DEFAULT_TASK(projectIdentifier)));
+
     };
 
+    const handleClose = () => {
+        dispatch(setTaskToEdit(DEFAULT_TASK(projectIdentifier)));
+        setNewTask(DEFAULT_TASK(projectIdentifier));
+        setTaskForm(prev => !prev);
+    }
     return (
-        <Container>
-            <Box
-                paddingTop="9px"
-                paddingLeft="20px"
-                paddingRight="20px" 
-                border="1px solid black"
-                overflow="scroll" 
-                height="656px">
-                    <form onSubmit={handleSubmit}> 
-                        <FormLabel display="inline-flex">New task: 
-                            <Text 
-                                marginLeft="5px" 
-                                color="grey">
-                                    {projectSequence}
-                            </Text>
-                        </FormLabel>
+        <Drawer 
+            isOpen={showTaskForm} 
+            size="md" 
+            onClose={handleClose} 
+            closeOnEsc closeOnOverlayClick>
+        <DrawerOverlay>
+            <DrawerContent>
+                <DrawerCloseButton />
+                <DrawerHeader display="inline-flex">
+                    {newTask?.projectSequence ? 'Editing task: ' : 'New task: '} 
+                    <Text 
+                        marginLeft="5px" 
+                        color="grey">
+                            {newTask?.projectSequence || projectSequence}
+                    </Text>
+                </DrawerHeader>
+                <DrawerBody>
+                    <form> 
                         <FormControl 
                             id="task-summary" 
                             marginBottom="20px"
@@ -74,6 +121,7 @@ const AddProjectTask = ({ projectIdentifier, projectSequence, closeForm }) => {
                                 <FormLabel>Status</FormLabel>
                                 <Select 
                                     name="status"
+                                    value={newTask?.status}
                                     onChange={
                                         ({ target }) => setNewTask(
                                             prev => ({ 
@@ -101,6 +149,7 @@ const AddProjectTask = ({ projectIdentifier, projectSequence, closeForm }) => {
                             id="task-priority">
                                 <FormLabel>Priority</FormLabel>
                                 <Select
+                                    value={newTask.priority}
                                     name="priority"
                                     onChange={
                                         ({ target }) => setNewTask(
@@ -120,7 +169,8 @@ const AddProjectTask = ({ projectIdentifier, projectSequence, closeForm }) => {
                             id="task-acceptance-criteria" 
                             marginBottom="20px">
                                 <FormLabel>Acceptance criteria</FormLabel>
-                                <Textarea 
+                                <Textarea
+                                    value={newTask.acceptanceCriteria}
                                     name="acceptanceCriteria" 
                                     onChange={
                                         ({target}) => 
@@ -141,6 +191,7 @@ const AddProjectTask = ({ projectIdentifier, projectSequence, closeForm }) => {
                             <Input                              
                                 name="dueDate"
                                 type="date"
+                                value={newTask.dueDate}
                                 onChange={
                                     ({target}) => 
                                         setNewTask(
@@ -152,16 +203,38 @@ const AddProjectTask = ({ projectIdentifier, projectSequence, closeForm }) => {
                                 } 
                                 />
                         </FormControl>
-                        <Button 
-                            type="submit" 
-                            float="right"
-                            color="white"
-                            backgroundColor="rgb(66 147 225)">
-                            Submit
-                        </Button>
                     </form>
-            </Box>
-        </Container>
+                </DrawerBody>
+                <DrawerFooter>
+                <Button 
+                    variant="outline" 
+                    mr={3} 
+                    onClick={handleClose}>
+                    Cancel
+                </Button>
+                {
+                    newTask?.projectSequence && 
+                        <Button 
+                            colorScheme="red" 
+                            marginRight="10px"
+                            onClick={() => {
+                                dispatch(deleteTask(newTask));
+                                handleClose();
+                            }}>
+                                    Delete
+                        </Button>
+                } 
+                <Button 
+                    colorScheme="blue" 
+                    onClick={handleSubmit}
+                    //isDisabled={!newTask.summary}
+                    >
+                        Submit
+                </Button>
+                </DrawerFooter>
+            </DrawerContent>
+        </DrawerOverlay>
+        </Drawer>
     )
 }
 

@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { Button } from '@chakra-ui/react';
 import { createProject, getSingleProject } from '../../redux/actions/projectActions';
 import { useDispatch, useSelector } from 'react-redux';
-import { CLEAR_ERROR, GET_ERRORS } from '../../redux/actions/types';
+import { CLEAR_ERROR, SET_ERRORS } from '../../redux/actions/types';
 import { useParams } from 'react-router';
 import { CLEAR_SINGLE_PROJECT } from "../../redux/actions/types";
 
@@ -51,7 +51,7 @@ const AddProject = ({ history }) => {
         event.preventDefault();
         dispatch(createProject(projectFields, history));
         dispatch({
-            type: GET_ERRORS,
+            type: SET_ERRORS,
             payload: {}
         });
     }

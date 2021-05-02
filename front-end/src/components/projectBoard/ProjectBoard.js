@@ -43,9 +43,11 @@ const ProjectBoard = () => {
         ?.filter(task => laneType === task.status.toLowerCase())
         .map((task, index) => 
         <ProjectTask 
+            setTaskForm={setTaskForm}
             key={`${index}-${task.projectSequence}`} 
             task={task} 
-            setQueue={setQueue} />
+            setQueue={setQueue}
+            taskIndex={index} />
         )
     }
 
@@ -64,7 +66,7 @@ const ProjectBoard = () => {
                 <hr style={{ marginTop: "60px", marginBottom: "30px" }}/>
                     <Flex>
                         {backlog.project_tasks.length > 0 && 
-                            <SimpleGrid columns={3} spacing={2}>
+                            <SimpleGrid columns={3} spacing={3} width="95%">
                                 {
                                     LANE_TYPES_CONST.map(
                                         (lane, index) => 
@@ -76,18 +78,16 @@ const ProjectBoard = () => {
                                         </Swimlane>
                                     )
                                 }
-                        </SimpleGrid>
-                        
+                            </SimpleGrid>
                         }
-                        {
-                        showTaskForm &&  
-                            <AddProjectTask
-                                closeForm={setTaskForm}
-                                projectIdentifier={match.params.id}
-                                projectSequence={`${match.params.id}-${nextSequence}`}
+                        
+                        <AddProjectTask
+                            showTaskForm={showTaskForm}
+                            setTaskForm={setTaskForm}
+                            projectIdentifier={match.params.id}
+                            projectSequence={`${match.params.id}-${nextSequence}`}
 
-                            />
-                        }   
+                        />
                     </Flex>
                         
             </div>
