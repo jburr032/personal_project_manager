@@ -19,15 +19,16 @@ public class UserService {
 	
 	public User saveUser(User newUser) {
 		try {
-			newUser.setUsername(newUser.getUsername());
-			
-			newUser.setPassword(bcryptencoder.encode(newUser.getPassword()));
-			newUser.setConfirmPassword("");
-				
-			// Username has to be unique
-			
-			// Make sure passwords match
-			return userRepo.save(newUser);
+            newUser.setPassword(bcryptencoder.encode(newUser.getPassword()));
+            
+            //Username has to be unique (exception)
+            newUser.setUsername(newUser.getUsername());
+            
+            // Make sure that password and confirmPassword match
+            // We don't persist or show the confirmPassword
+            newUser.setConfirmPassword("");
+            
+            return userRepo.save(newUser);
 		}catch(Exception e) {
 			throw new UniqueUsernameException("User with " + newUser.getUsername() + " already exists");	
 		}		

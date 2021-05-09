@@ -9,4 +9,6 @@ import com.ppm_tool.ppm.domain.User;
 public interface UserRepository extends CrudRepository<User, Long>{
 
 	User findByUsername(String username);
+	User getById(Long id);
+	
 }
