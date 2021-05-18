@@ -39,8 +39,8 @@ public class ProjectController {
 	private MappingValidationErrors mappingValidationService;
 	
 	@GetMapping("/all")
-	public Iterable<Project> getAllProjects(){
-		return projectService.findAllProjects();
+	public Iterable<Project> getAllProjects(Principal principal){
+		return projectService.findProjectsByProjectLeader(principal.getName());
 				
 	}
 
@@ -55,8 +55,8 @@ public class ProjectController {
 	}
 	
 	@GetMapping("/{projectId}")
-	public ResponseEntity<?> getProject(@PathVariable String projectId){
-		Project fetchedProject = projectService.findProjectByIdentifier(projectId);
+	public ResponseEntity<?> getProject(@PathVariable String projectId, Principal principal){
+		Project fetchedProject = projectService.findProjectByIdentifier(projectId, principal.getName());
 
 		return new ResponseEntity<Project>(fetchedProject, HttpStatus.OK);
 	}
@@ -64,8 +64,8 @@ public class ProjectController {
 
 	
 	@DeleteMapping("/{projectId}")
-	public ResponseEntity<String> deleteProject(@PathVariable String projectId){
-		projectService.deleteProjectById(projectId);
+	public ResponseEntity<String> deleteProject(@PathVariable String projectId, Principal principal){
+		projectService.deleteProjectById(projectId, principal.getName());
 		
 		return new ResponseEntity<String>("Project " + projectId + " was deleted", HttpStatus.OK);
 	}

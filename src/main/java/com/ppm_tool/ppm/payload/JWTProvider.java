@@ -24,7 +24,7 @@ public class JWTProvider {
         User user = (User)authentication.getPrincipal();
         Date now = new Date(System.currentTimeMillis());
 
-        Date expiryDate = new Date(now.getTime()+ 60_000);
+        Date expiryDate = new Date(now.getTime()+ 600_000);
 
         String userId = Long.toString(user.getId());
 

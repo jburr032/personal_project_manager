@@ -57,6 +57,8 @@ public class Project {
 	@JsonIgnore
 	private User user;
 	
+	private String projectLeader;
+	
 	public User getUser() {
 		return user;
 	}
@@ -73,7 +75,6 @@ public class Project {
 		this.projectLeader = projectLeader;
 	}
 
-	private String projectLeader;
 	
 	public Project() {}
 
